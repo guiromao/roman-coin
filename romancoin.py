@@ -189,6 +189,25 @@ def add_transaction():
     response = {'message': f'This transaction will be added to the next block, number {index}'}
     
     return jsonify(response), 201
+
+
+@app.route('/connect_node', methods=['POST'])
+def connect_node():
+    json = request.get_json()
+    nodes = json.get('nodes')
+    
+    if nodes is None:
+        return "No nodes connected to this network...", 400
+    
+    for node in nodes:
+        blockchain.add_node(node)
+        
+    response = {
+        'message': 'These are the connected nodes to the blockchain!',
+        'total_nodes': list(blockchain.nodes)
+    }
+    
+    return jsonify(response), 201
     
 
 app.run(host='0.0.0.0', port=5000)
